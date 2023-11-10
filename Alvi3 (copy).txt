@@ -1,0 +1,145 @@
+********************************************************************************
+NAME	: ALVIN SAJU                               CLASS   :S7 CSE A
+ROLL NO	: 06                                       DATE	   :18/09/2023
+
+
+			LEXICAL ANALYSER	
+********************************************************************************
+				PROGRAM
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+char *keywords[] = {"void", "int", "float", "if", "else"};
+char operators[] = "+-*/=";
+char sp[] = "{}()[];";
+
+int isKeyword(char *w) 
+{
+    int i;
+    for (i = 0; i < 5; i++) 
+    {
+        if (strcmp(keywords[i], w) == 0) 
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int isOperator(char ch) 
+{
+    int i;
+    for (i = 0; i < 5; i++) 
+    {
+        if (ch == operators[i]) 
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int isSpecialChar(char ch) 
+{
+    int i;
+    for (i = 0; i < strlen(sp); i++) 
+    {
+        if (ch == sp[i]) 
+		{
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void lexical_analyzer(char *filename) 
+{
+    FILE *fp = fopen(filename, "r");
+    char ch, w[100];
+    int i;
+
+    if (fp == NULL) 
+	{
+        printf("Error opening file\n");
+        return;
+    }
+
+    while ((ch = fgetc(fp)) != EOF) 
+    {
+        i = 0;
+
+        while (isspace(ch)) 
+        {
+            ch = fgetc(fp);
+        }
+
+        while (isalnum(ch)) 
+        {
+            w[i++] = ch;
+            ch = fgetc(fp);
+        }
+        w[i] = '\0';
+
+        if (isKeyword(w)) 
+        {
+            printf("%s - keyword\n", w);
+        } 
+        else if (isalpha(w[0])) 
+        {
+            printf("%s - identifier\n", w);
+        }
+
+        if (isOperator(ch)) 
+        {
+            printf("%c - operator\n", ch);
+        } 
+        else if (isSpecialChar(ch)) 
+        {
+            printf("%c - special character\n", ch);
+        } 
+        else if (!isspace(ch)) 
+        {
+            printf("%c - unknown\n", ch);
+        }
+    }
+
+    fclose(fp);
+}
+
+int main() 
+{
+    lexical_analyzer("D:/COMPILERLAB//demo.txt");
+    return 0;
+}
+
+
+*********************************************************************************      	            
+INPUT FILE
+
+int a,c;
+a=a+b;
+c=a*b;
+*********************************************************************************  
+				OUTPUT
+int - keyword
+a - identifier
+, - special character
+c - identifier
+; - special character
+a - identifier
+= - operator
+a - identifier
++ - operator
+b - identifier
+; - special character
+c - identifier
+= - operator
+a - identifier
+* - operator
+b - identifier
+; - special character
+
+
+
+
